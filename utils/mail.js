@@ -2,6 +2,10 @@ import Mailgen from "mailgen";
 import nodemailer from "nodemailer";
 
 const sendMail = async (options) => {
+  if (!options?.mailContent || !options.mailContent.body) {
+    throw new Error("Mail content missing or invalid");
+  }
+
   const mailGenerator = new Mailgen({
     theme: "default",
     product: {
@@ -9,6 +13,7 @@ const sendMail = async (options) => {
       link: "http://taskmanagerlink.com",
     },
   });
+
   const emailText = mailGenerator.generatePlaintext(options.mailContent);
   const emailHtml = mailGenerator.generate(options.mailContent);
 
@@ -21,73 +26,62 @@ const sendMail = async (options) => {
     },
   });
 
-  const Mail = {
+  const mailOptions = {
     from: `"Task Manager" <${process.env.EMAIL_USER}>`,
     to: options.email,
     subject: options.subject,
-    html: emailHtml,
     text: emailText,
+    html: emailHtml,
   };
 
-  try {
-    await transporter.sendMail(Mail);
-  } catch (error) {
-    console.error("Email service failed ", error);
-  }
+  await transporter.sendMail(mailOptions);
 };
+
 
 const emailVerificationMailgenContent = (username, verificationUrl) => {
   return {
     body: {
       name: username,
-
-      intro: "Welcome to our App 🎉 We're excited to have you on board.",
-
+      intro: "Welcome to Task Manager 🎉 We’re excited to have you onboard.",
       action: {
         instructions:
-          "To complete your registration and verify your email address, please click the button below:",
+          "To verify your email address and activate your account, click the button below:",
         button: {
           color: "#22BC66",
           text: "Verify Email",
           link: verificationUrl,
         },
       },
-
       outro:
         "If you did not create this account, you can safely ignore this email.",
-
-      signature: "Thanks",
     },
   };
 };
+
 
 const forgotPasswordMailgenContent = (username, resetPasswordUrl) => {
   return {
     body: {
       name: username,
-
-      intro: "You recently requested to reset your password for your account.",
-
+      intro:
+        "You recently requested to reset your password for your Task Manager account.",
       action: {
         instructions:
-          "Click the button below to reset your password. This link is valid for a limited time.",
+          "Click the button below to reset your password. This link will expire soon.",
         button: {
           color: "#DC4D2F",
           text: "Reset Password",
           link: resetPasswordUrl,
         },
       },
-
       outro:
-        "If you did not request a password reset, please ignore this email or contact support if you have concerns.",
-
-      signature: "Thanks",
+        "If you did not request a password reset, please ignore this email.",
     },
   };
 };
 
 export {
+  sendMail,
   emailVerificationMailgenContent,
   forgotPasswordMailgenContent,
-  sendMail,
 };
