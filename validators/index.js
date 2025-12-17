@@ -68,4 +68,48 @@ const loginUserValidator = () => {
   ];
 };
 
-export { registeUserValidator,loginUserValidator };
+const userchangecurrenrPasswordValidator = () => {
+  return [
+    body("oldPassword")
+      .trim()
+      .notEmpty()
+      .withMessage("currentPassword is required"),
+    body("newPassword")
+      .trim()
+      .notEmpty()
+      .withMessage("newPassword is required")
+      .isLength({ min: 6 })
+      .withMessage("newPassword must be at least 6 characters long"),
+  ];
+};
+
+const userforgotPasswordValidator = () => {
+  return [
+    body("email")
+      .trim()
+      .notEmpty()
+      .withMessage("email is required")
+      .isEmail()
+      .withMessage("email is invalid")
+      .normalizeEmail(),
+  ];
+};
+
+const resetForgotPasswordValidator = () => {
+  return [
+    body("newPassword")
+      .trim()
+      .notEmpty()
+      .withMessage("newPassword is required")
+      .isLength({ min: 6 })
+      .withMessage("newPassword must be at least 6 characters long"),
+  ];
+};
+
+export {
+  registeUserValidator,
+  loginUserValidator,
+  userchangecurrenrPasswordValidator,
+  userforgotPasswordValidator,
+  resetForgotPasswordValidator,
+};

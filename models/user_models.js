@@ -33,7 +33,7 @@ const userSchema = new mongoose.Schema(
     },
     fullName: {
       type: String,
-      // required: true,
+
       trim: true,
     },
     password: {
@@ -81,7 +81,6 @@ userSchema.methods.generateRefreshToken = function () {
 
 userSchema.methods.generateTemporaryToken = function () {
   const unhashToken = crypto.randomBytes(20).toString("hex");
-
   const hashToken = crypto
     .createHash("sha256")
     .update(unhashToken)
