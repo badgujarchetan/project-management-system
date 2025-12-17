@@ -8,6 +8,7 @@ import {
   logOutUser,
   refreshAccessToken,
   registerUserController,
+  resendEmailVerification,
   resetForgotPassword,
 } from "../controllers/auth_controller.js";
 import { validateMiddleware } from "../middlewares/validator_middlewares.js";
@@ -53,9 +54,16 @@ router.post(
 );
 router.post(
   "/changeCurrentPassword",
+  authJWTVerify,
   userchangecurrenrPasswordValidator(),
   validateMiddleware,
   changeCurrentPassword
+);
+router.post(
+  "/resendEmailVerification",
+  authJWTVerify,
+  validateMiddleware,
+  resendEmailVerification
 );
 router.get("/logout", authJWTVerify, logOutUser);
 router.get("/current-user", authJWTVerify, getCurrentuser);

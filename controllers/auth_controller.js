@@ -62,7 +62,7 @@ const registerUserController = asyncHandler(async (req, res) => {
       user.username,
       `${req.protocol}://${req.get(
         "host"
-      )}/api/v1/users/verify-email/${unhashToken}`
+      )}/api/v1/auth/email-verify/${unhashToken}`
     ),
   });
 
@@ -320,6 +320,7 @@ const forgotPassword = asyncHandler(async (req, res) => {
 
 const resetForgotPassword = asyncHandler(async (req, res) => {
   const { resetToken } = req.params;
+  // console.log({resetToken})
   const { newPassword } = req.body;
 
   const hashToken = crypto
